@@ -27,61 +27,64 @@ from .helpers import assign_dte, inspect
 
 pd.set_option("display.expand_frame_repr", False)
 
-on = ["underlying_symbol", "option_type", "expiration", "strike"]
+class Backtest(object):
+    on = ["underlying_symbol", "option_type", "expiration", "strike"]
 
-output_cols = {
-    "quote_date_entry": "entry_date",
-    "quote_date_exit": "exit_date",
-    "delta_entry": "entry_delta",
-    "underlying_price_entry": "entry_stk_price",
-    "underlying_price_exit": "exit_stk_price",
-    "dte_exit": "exit_dte",
-}
+    output_cols = {
+        "quote_date_entry": "entry_date",
+        "quote_date_exit": "exit_date",
+        "delta_entry": "entry_delta",
+        "underlying_price_entry": "entry_stk_price",
+        "underlying_price_exit": "exit_stk_price",
+        "dte_exit": "exit_dte",
+    }
 
-output_format = [
-    "entry_date",
-    "exit_date",
-    "expiration",
-    "underlying_symbol",
-    "exit_dte",
-    "ratio",
-    "contracts",
-    "option_type",
-    "strike",
-    "entry_delta",
-    "bid_entry",
-    "ask_entry",
-    "bid_exit",
-    "ask_exit",
-    "entry_stk_price",
-    "exit_stk_price",
-    "entry_opt_price",
-    "exit_opt_price",
-    "entry_price",
-    "exit_price",
-    "cost",
-]
+    output_format = [
+        "entry_date",
+        "exit_date",
+        "expiration",
+        "underlying_symbol",
+        "exit_dte",
+        "ratio",
+        "contracts",
+        "option_type",
+        "strike",
+        "entry_delta",
+        "bid_entry",
+        "ask_entry",
+        "bid_exit",
+        "ask_exit",
+        "entry_stk_price",
+        "exit_stk_price",
+        "entry_opt_price",
+        "exit_opt_price",
+        "entry_price",
+        "exit_price",
+        "cost",
+    ]
 
+    def __init__(self, data, start, end, initial_capital):
+        pass
+    
+    def run(self):
+        contracts = params.get("contracts", 1)
 
-def backtest(strategy, data, **params):
-    contracts = params.get("contracts", 1)
+        mode = params.get("mode", "market")
+        entry_mode = exit_mode = mode
+        entry_mode = params.get("entry_mode", entry_mode)
+        exit_mode = params.get("exit_mode", exit_mode)
 
-    mode = params.get("mode", "market")
-    entry_mode = exit_mode = mode
-    entry_mode = params.get("entry_mode", entry_mode)
-    exit_mode = params.get("exit_mode", exit_mode)
+        data = assign_dte(data)
 
-    data = assign_dte(data)
-
-    return (
-        strategy.pipe(assign_dte)
-        .pipe(calc_entry_px, entry_mode)
-        .pipe(pd.merge, data, on=on, suffixes=("_entry", "_exit"))
-        .rename(columns={"bid": "bid_exit", "ask": "ask_exit"})
-        .assign(contracts=contracts)
-        .round(2)
-        .pipe(calc_exit_px, exit_mode)
-        .pipe(calc_pnl)
-        .rename(columns=output_cols)
-        .sort_values(["entry_date", "expiration", "underlying_symbol", "strike"])
-    )[output_format]
+        return (
+            strategy.pipe(assign_dte)
+            .pipe(calc_entry_px, entry_mode)
+            .pipe(pd.merge, data, on=on, suffixes=("_entry", "_exit"))
+            .rename(columns={"bid": "bid_exit", "ask": "ask_exit"})
+            .assign(contracts=contracts)
+            .round(2)
+            .pipe(calc_exit_px, exit_mode)
+            .pipe(calc_pnl)
+            .rename(columns=output_cols)
+            .sort_values(["entry_date", "expiration", "underlying_symbol", "strike"])
+        )[output_format]

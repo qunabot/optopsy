@@ -4,8 +4,18 @@ import pandas as pd
 import pytest
 
 from optopsy.enums import OptionType
-from optopsy.option_queries import (between, eq, gt, gte, lt, lte, ne, nearest,
-                                    opt_type, underlying_price)
+from optopsy.option_queries import (
+    between,
+    eq,
+    gt,
+    gte,
+    lt,
+    lte,
+    ne,
+    nearest,
+    opt_type,
+    underlying_price,
+)
 
 
 def filepath():
