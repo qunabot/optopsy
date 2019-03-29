@@ -14,46 +14,14 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from enum import Enum
+from optopsy.strategies.singles import Single
+from optopsy.strategies.verticals import Vertical
+from optopsy.strategies.condors import Condor
 
 
-class Period(Enum):
-    ONE_DAY = 1
-    TWO_DAYS = 2
-    THREE_DAYS = 3
-    FOUR_DAYS = 4
-    FIVE_DAYS = 5
-    SIX_DAYS = 6
-    SEVEN_DAYS = 7
-    EIGHT_DAYS = 8
-    NINE_DAYS = 9
-    TEN_DAYS = 10
-    ONE_WEEK = 7
-    TWO_WEEKS = 14
-    THREE_WEEKS = 21
-    FOUR_WEEKS = 28
-    FIVE_WEEKS = 35
-    SIX_WEEKS = 42
-    SEVEN_WEEKS = 49
-
-
-class OptionType(Enum):
-    CALL = ("call", 1)
-    PUT = ("put", -1)
-
-
-class OrderAction(Enum):
-    BTO = (1, "BUY", "BOT")
-    BTC = (1, "BUY", "BOT")
-    STO = (-1, "SELL", "SLD")
-    STC = (-1, "SELL", "SLD")
-
-
-class DayOfWeek(Enum):
-    MONDAY = 0
-    TUESDAY = 1
-    WEDNESDAY = 2
-    THURSDAY = 3
-    FRIDAY = 4
-    SATURDAY = 5
-    SUNDAY = 6
+class OptionChain:
+    def __init__(self, symbol):
+        self.symbol = symbol
+        self.single = Single(self.symbol)
+        self.verticals = Vertical(self.symbol)
+        self.condors = Condor(self.symbol)
