@@ -22,8 +22,36 @@ class Backtest(object):
         self.datas = datas
         self.strategy = strategy
 
+    def _do_checks(data):
+        required = {
+            "underlying_symbol": "object",
+            "quote_date": "datetime64[ns]",
+            "expiration": "datetime64[ns]",
+            "strike": ("float64", "int64"),
+            "option_type": "object",
+            "bid": "float64",
+            "ask": "float64",
+            "underlying_price": "float64",
+            "delta": "float64",
+        }
+
+        if not all(col in data.columns.values for col in list(required.keys())):
+            raise ValueError("Required columns missing!")
+
+        data_types = data.dtypes.astype(str).to_dict()
+
+        for key, val in required.items():
+            if (key == "strike" and str(data_types[key]) not in val) or (
+                key != "strike" and data_types[key] != val
+            ):
+                raise ValueError("Incorrect datatypes detected!")
+        
     def load_data(self, **datas):
         if isinstance(datas, dict):
+            # check dataframes to make sure they have same columns
+            for frame in datas.values():
+                _do_checks(frame)
+
             self.datas = datas
 
     def add_strategy(self, strategy):
@@ -31,7 +59,16 @@ class Backtest(object):
             self.strategy = strategy
 
     def run(self):
-        pass
+        """
+        Here we will take our data and supply a slice of option
+        chain per trading day to the strategy to act upon.
+        """
+
+        # go through each key in self.datas and retreive the data
+        # column into a list of lists.
+
+
+        # get the unique dates across all datas
 
     def optimze(self, **kwargs):
         pass
