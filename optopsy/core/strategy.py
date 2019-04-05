@@ -2,7 +2,7 @@ import pandas as pd
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
 from optopsy.strategies.option_chain import OptionChain
-from optopsy.api.enum import Brokerage, OrderAction
+from optopsy.core.types import Brokerage, OrderAction
 from optopsy.api.scheduler import Scheduler
 
 

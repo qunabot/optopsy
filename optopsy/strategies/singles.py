@@ -14,9 +14,9 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from optopsy.api.enum import OrderStrategy, LegAction, OptionType
-from optopsy.api.order import Order
-from optopsy.api.leg import Leg
+from optopsy.core.types import OrderStrategy, LegAction, OptionType
+from optopsy.core.order import Order
+from optopsy.core.leg import Leg
 
 
 class Single(Order):

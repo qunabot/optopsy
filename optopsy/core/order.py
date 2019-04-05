@@ -17,7 +17,7 @@
 from optopsy.api.order_filter import OrderFilter
 from optopsy.api.rank_filter import RankFilter
 from optopsy.api.size_filter import SizeFilter
-from optopsy.api.utils import Utils
+from optopsy.core.utils import Utils
 
 
 class Order:
