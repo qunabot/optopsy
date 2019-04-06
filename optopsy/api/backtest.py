@@ -15,6 +15,8 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from optopsy.core.strategy import Strategy
+import itertools
+import pandas as pd
 
 
 class Backtest(object):
@@ -22,7 +24,7 @@ class Backtest(object):
         self.datas = datas
         self.strategy = strategy
 
-    def _do_checks(data):
+    def _do_checks(self, data):
         required = {
             "underlying_symbol": "object",
             "quote_date": "datetime64[ns]",
@@ -45,12 +47,20 @@ class Backtest(object):
                 key != "strike" and data_types[key] != val
             ):
                 raise ValueError("Incorrect datatypes detected!")
-        
+
+    def _get_trade_dates(self):
+        # get the unique dates across all datas
+        dates = [
+            pd.Series(data.quote_date.unique()).tolist() for data in self.datas.values()
+        ]
+        merged_dates = list(itertools.chain.from_iterable(dates))
+        return sorted(set(merged_dates))
+
     def load_data(self, **datas):
         if isinstance(datas, dict):
             # check dataframes to make sure they have same columns
             for frame in datas.values():
-                _do_checks(frame)
+                self._do_checks(frame)
 
             self.datas = datas
 
@@ -66,9 +76,7 @@ class Backtest(object):
 
         # go through each key in self.datas and retreive the data
         # column into a list of lists.
-
-
-        # get the unique dates across all datas
+        trade_dates = self._get_trade_dates()
 
     def optimze(self, **kwargs):
         pass

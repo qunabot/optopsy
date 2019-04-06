@@ -54,3 +54,5 @@ def test_sample_strategy():
     backtest.add_strategy(SampleStrategy)
     backtest.load_data(SPXW=spxw)
     backtest.run()
+
+    assert False
