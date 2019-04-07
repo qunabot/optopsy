@@ -14,69 +14,55 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import queue
+
 from optopsy.core.strategy import Strategy
-import itertools
-import pandas as pd
+from optopsy.data.options.cboe_data import CboeOptionData
 
 
-class Backtest(object):
-    def __init__(self, datas=None, strategy=None):
-        self.datas = datas
+class Backtest:
+    def __init__(self, strategy=None, title=None):
+        if self.strategy is None:
+            raise Exception("Must specify strategy for backtest!")
+
         self.strategy = strategy
+        self.title = title
 
-    def _do_checks(self, data):
-        required = {
-            "underlying_symbol": "object",
-            "quote_date": "datetime64[ns]",
-            "expiration": "datetime64[ns]",
-            "strike": ("float64", "int64"),
-            "option_type": "object",
-            "bid": "float64",
-            "ask": "float64",
-            "underlying_price": "float64",
-            "delta": "float64",
-        }
+        self.subscription_manager = SubscriptionManager()
+        self.brokerage = DefaultBrokerage()
 
-        if not all(col in data.columns.values for col in list(required.keys())):
-            raise ValueError("Required columns missing!")
+        self.security_manager = SecurityManager()
+        self.transaction_manager = TransactionManager()
+        self.portolio_manager = PortfolioManager(
+            self.security_manager, self.transaction_manager)
 
-        data_types = data.dtypes.astype(str).to_dict()
+        self.schedule_manager = ScheduleManager()
 
-        for key, val in required.items():
-            if (key == "strike" and str(data_types[key]) not in val) or (
-                key != "strike" and data_types[key] != val
-            ):
-                raise ValueError("Incorrect datatypes detected!")
+    def add_options(self, source, interval, **options):
+        for symbol, data in options.items():
+            self.option_provider.subscribe(symbol, data, interval)
+        self.option_provider.update_iterator()
 
-    def _get_trade_dates(self):
-        # get the unique dates across all datas
-        dates = [
-            pd.Series(data.quote_date.unique()).tolist() for data in self.datas.values()
-        ]
-        merged_dates = list(itertools.chain.from_iterable(dates))
-        return sorted(set(merged_dates))
-
-    def load_data(self, **datas):
-        if isinstance(datas, dict):
-            # check dataframes to make sure they have same columns
-            for frame in datas.values():
-                self._do_checks(frame)
-
-            self.datas = datas
-
-    def add_strategy(self, strategy):
-        if isinstance(strategy, Strategy):
-            self.strategy = strategy
+    def add_equities(self, source, interval, **equities):
+        for symbol, data in equities.items():
+            self.equity_provider.subscribe(symbol, data)
 
     def run(self):
         """
         Here we will take our data and supply a slice of option
         chain per trading day to the strategy to act upon.
         """
+        if self.data_provider.is_empty():
+            raise Exception("Must add at least one data source")
 
         # go through each key in self.datas and retreive the data
         # column into a list of lists.
-        trade_dates = self._get_trade_dates()
+        while self.data_provider.active:
+            try:
+                event = self.events_queue.get(False)
+            except queue.Empty:
+                self.data_provider.stream_next()
+            else:
+                if event is not None:
 
-    def optimze(self, **kwargs):
-        pass
+

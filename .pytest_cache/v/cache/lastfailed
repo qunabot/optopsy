@@ -1,0 +1,8 @@
+{
+  "tests/integration/test_integration_iron_condors.py": true, 
+  "tests/integration/test_integration_singles.py": true, 
+  "tests/integration/test_integration_strategy.py": true, 
+  "tests/integration/test_integration_verticals.py": true, 
+  "tests/test_filters.py": true, 
+  "tests/test_option_query.py": true
+}

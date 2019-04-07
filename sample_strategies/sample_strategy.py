@@ -56,6 +56,12 @@ class SampleStrategy(op.Strategy):
         """
 
 
+class SampleSentimentProvider(op.DataProvider):
+"""
+Here we define a custom data handler to load sentiment data.
+"""
+    def subscribe_data
+
 def run_strategy():
     """
     To use your data with this library,
@@ -76,15 +82,18 @@ def run_strategy():
 
     # create our inport dataframes
     curr_file = os.path.abspath(os.path.dirname(__file__))
-    spx = pd.read_pickle(os.path.join(curr_file, "spx.csv"))
-    vxx = pd.read_pickle(os.path.join(curr_file, "vxx.csv"))
+    spx = pd.read_csv(os.path.join(curr_file, "spx.csv"))
+    vxx = pd.read_csv(os.path.join(curr_file, "vxx.csv"))
+    sentiment = pd.read_csv(os.path.join(curr_file, "sentiment.csv"))
 
     # create a new backtest instance
-    backtest = op.Backtest()
+    backtest = op.Backtest(
+        strategy=SampleStrategy, 
+        sentiment_provider=SampleSentimentProvider)
 
     # load the datafeeds from our dataframes
-    backtest.load_data({"SPX": spx, "VXX": vxx})
-    backtest.add_strategy(SampleStrategy)
+    backtest.add_options(SPX=spx, VXX=vxx)
+    backtest.add_sentiment(sentiment)
     backtest.run().plot()
 
 

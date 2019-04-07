@@ -18,6 +18,7 @@ spxw = pd.read_csv(
 )
 
 
+
 class SampleStrategy(op.Strategy):
     def on_init(self):
         self.set_cash(10000.0)
@@ -52,7 +53,7 @@ class SampleStrategy(op.Strategy):
 def test_sample_strategy():
     backtest = op.Backtest()
     backtest.add_strategy(SampleStrategy)
-    backtest.load_data(SPXW=spxw)
+    backtest.load_instrument_data(SPXW=spxw)
     backtest.run()
 
     assert False
