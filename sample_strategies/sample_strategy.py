@@ -28,7 +28,7 @@ class SampleStrategy(op.Strategy):
         """
         self.buy(
             (
-                self.get_instrument("SPX")
+                self.get_instrument("VXX")
                 .verticals.call_spread()
                 .select_by(scale=False)
                 .days_to_expiration(min_days=40, max_days=47)
@@ -56,12 +56,6 @@ class SampleStrategy(op.Strategy):
         """
 
 
-class SampleSentimentProvider(op.DataProvider):
-"""
-Here we define a custom data handler to load sentiment data.
-"""
-    def subscribe_data
-
 def run_strategy():
     """
     To use your data with this library,
@@ -87,9 +81,7 @@ def run_strategy():
     sentiment = pd.read_csv(os.path.join(curr_file, "sentiment.csv"))
 
     # create a new backtest instance
-    backtest = op.Backtest(
-        strategy=SampleStrategy, 
-        sentiment_provider=SampleSentimentProvider)
+    backtest = op.Backtest(strategy=SampleStrategy)
 
     # load the datafeeds from our dataframes
     backtest.add_options(SPX=spx, VXX=vxx)

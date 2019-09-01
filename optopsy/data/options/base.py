@@ -38,4 +38,3 @@ class OptionDataProvider(ABC):
 
     def update_iterator(self):
         self.iterator = OptionChainIterator(self.option_chains)
-

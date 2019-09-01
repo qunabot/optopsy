@@ -21,6 +21,12 @@ from optopsy.data.options.cboe_data import CboeOptionData
 
 
 class Backtest:
+    """
+    This class should be used as an entry point for backtest, it will setup
+    all the nessesary components for the backtest and initialize and run
+    the strategy_runner class that contains the user's strategy.
+    """
+
     def __init__(self, strategy=None, title=None):
         if self.strategy is None:
             raise Exception("Must specify strategy for backtest!")
@@ -34,7 +40,8 @@ class Backtest:
         self.security_manager = SecurityManager()
         self.transaction_manager = TransactionManager()
         self.portolio_manager = PortfolioManager(
-            self.security_manager, self.transaction_manager)
+            self.security_manager, self.transaction_manager
+        )
 
         self.schedule_manager = ScheduleManager()
 
@@ -52,17 +59,4 @@ class Backtest:
         Here we will take our data and supply a slice of option
         chain per trading day to the strategy to act upon.
         """
-        if self.data_provider.is_empty():
-            raise Exception("Must add at least one data source")
-
-        # go through each key in self.datas and retreive the data
-        # column into a list of lists.
-        while self.data_provider.active:
-            try:
-                event = self.events_queue.get(False)
-            except queue.Empty:
-                self.data_provider.stream_next()
-            else:
-                if event is not None:
-
-
+        pass

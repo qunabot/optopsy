@@ -18,7 +18,6 @@ spxw = pd.read_csv(
 )
 
 
-
 class SampleStrategy(op.Strategy):
     def on_init(self):
         self.set_cash(10000.0)

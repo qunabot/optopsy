@@ -8,7 +8,7 @@ class TransactionManager:
 
     def add_order(self):
         pass
-    
+
     def update_order(self):
         pass
 

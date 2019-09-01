@@ -36,7 +36,7 @@ class CboeOptionData(OptionDataProvider):
 
         for key, val in required.items():
             if (key == "strike" and str(data_types[key]) not in val) or (
-                    key != "strike" and data_types[key] != val
+                key != "strike" and data_types[key] != val
             ):
                 raise ValueError("Incorrect datatypes detected!")
 
@@ -46,4 +46,3 @@ class CboeOptionData(OptionDataProvider):
         except StopIteration:
             self.active = False
             return
-

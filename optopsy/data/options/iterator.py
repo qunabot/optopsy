@@ -1,4 +1,4 @@
-class OptionChainIterator():
+class OptionChainIterator:
     """
     This class acts as an iterator over a pandas dataframe object
     that provides a slice of data for current iteration date
@@ -11,7 +11,8 @@ class OptionChainIterator():
     def trade_dates(self):
         # get the unique dates across all symbols
         dates = [
-            pd.Series(chain.quote_date.unique()).tolist() for chain in self.option_chain.values()
+            pd.Series(chain.quote_date.unique()).tolist()
+            for chain in self.option_chain.values()
         ]
         merged_dates = list(itertools.chain.from_iterable(dates))
         return sorted(set(merged_dates))
@@ -24,6 +25,3 @@ class OptionChainIterator():
             output[symbol] = chain[chain["quote_date"] == curr_date]
 
         return curr_date, output
-
-
-
