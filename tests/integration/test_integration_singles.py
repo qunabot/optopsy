@@ -15,94 +15,47 @@ data = pd.read_csv(
     filepath(), parse_dates=["expiration", "quote_date"], infer_datetime_format=True
 )
 
+class SampleCallStrategy(Strategy):
+    # Create a simple strategy to buy SPX calls within 31 days to expiration at 30 delta
+
+    def on_init(self):
+        spx = self.get_instrument("SPX")
+
+    def entry_handler():
+        long_calls = spx.singles().call()
+
+        # open a call position with 31 days to expiration at 30 delta
+        # returns an OrderFilter object
+        filters = (
+            long_calls.select_by()
+            .entry_dte(31)
+            .delta(0.30)
+        )
+
+        # open one contract sizing
+        # returns an OrderSize Object
+        size = (
+            long_calls.size_by()
+            .quantity(1)
+        )
+
+        # when multiple positions match the criteria, rank by cost basis
+        # returns an OrderRank Object
+        rank = (
+            long_calls.rank_by()
+            .cost_basis()
+            .rank_min()
+        )
+
+        # buy the long calls, returns an Order Object
+        self.buy("MyLongCallID", filters, size, rank)
+
+    def exit_handler():
+        self.sell(select_position(id="MyLongCallID").exit_dte(7))
+
 
 def test_long_call():
-    results = (
-        data.start_date(datetime(2018, 1, 1))
-        .end_date(datetime(2018, 2, 28))
-        .entry_dte(31)
-        .delta(0.30)
-        .calls()
-        .pipe(op.long_call)
-        .pipe(op.backtest, data)
-        .exit_dte(7)
-        .total_profit()
-    )
-    assert results == 9330.0
+    results = op.backtest(SampleCallStrategy, data).run()
+    assert results.total_profit() == 9330.0
 
 
-def test_long_call_midpoint():
-    results = (
-        data.start_date(datetime(2018, 1, 1))
-        .end_date(datetime(2018, 2, 28))
-        .entry_dte(31)
-        .delta(0.30)
-        .calls()
-        .pipe(op.long_call)
-        .pipe(op.backtest, data, mode="midpoint")
-        .exit_dte(7)
-        .total_profit()
-    )
-    assert results == 9630.0
-
-
-def test_long_call_expire():
-    results = (
-        data.start_date(datetime(2018, 1, 1))
-        .end_date(datetime(2018, 2, 28))
-        .entry_dte(31)
-        .delta(0.30)
-        .calls()
-        .pipe(op.long_call)
-        .pipe(op.backtest, data)
-        .exit_dte("expire")
-        .total_profit()
-    )
-    assert results == 7710.0
-
-
-def test_short_call():
-    results = (
-        data.start_date(datetime(2018, 1, 1))
-        .end_date(datetime(2018, 2, 28))
-        .entry_dte(31)
-        .delta(0.30)
-        .calls()
-        .pipe(op.short_call)
-        .pipe(op.backtest, data)
-        .exit_dte(7)
-        .total_profit()
-    )
-
-    assert results == -9930.0
-
-
-def test_long_put():
-    results = (
-        data.start_date(datetime(2018, 1, 1))
-        .end_date(datetime(2018, 2, 28))
-        .entry_dte(31)
-        .delta(0.30)
-        .puts()
-        .pipe(op.long_put)
-        .pipe(op.backtest, data)
-        .exit_dte(7)
-        .total_profit()
-    )
-    assert results == 4470.0
-
-
-def test_short_put():
-    results = (
-        data.start_date(datetime(2018, 1, 1))
-        .end_date(datetime(2018, 2, 28))
-        .entry_dte(31)
-        .delta(0.30)
-        .puts()
-        .pipe(op.short_put)
-        .pipe(op.backtest, data)
-        .exit_dte(7)
-        .total_profit()
-    )
-
-    assert results == -5060.0
