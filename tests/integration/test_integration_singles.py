@@ -28,8 +28,8 @@ class SampleCallStrategy(Strategy):
         # returns an OrderFilter object
         filters = (
             long_calls.select_by()
-            .entry_dte(31)
-            .delta(0.30)
+            .days_to_expiration(30, 31)
+            .delta(0.30, 0.40)
         )
 
         # open one contract sizing
@@ -43,8 +43,8 @@ class SampleCallStrategy(Strategy):
         # returns an OrderRank Object
         rank = (
             long_calls.rank_by()
+            .min()
             .cost_basis()
-            .rank_min()
         )
 
         # buy the long calls, returns an Order Object
