@@ -8,6 +8,9 @@ __pycache__/
 # Virtual environments
 optopsy-env
 
+# historic files
+classic/
+
 # C extensions
 *.so
 
@@ -33,12 +36,6 @@ MANIFEST
 .DS_Store
 .idea
 .vscode
-
-/data
-/strategies/data/
-/tests/.pytest_cache/
-/strategies/results/
-/strategies/private/
 
 *.swp
 *.swo
