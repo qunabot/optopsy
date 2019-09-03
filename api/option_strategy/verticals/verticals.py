@@ -1,4 +1,3 @@
-class Vertical():
-
+class Vertical:
     def init(self):
         pass

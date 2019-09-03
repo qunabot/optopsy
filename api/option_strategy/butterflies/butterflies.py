@@ -1,4 +1,3 @@
-class Butterfly():
-
+class Butterfly:
     def init(self):
         pass

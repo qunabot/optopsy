@@ -1,5 +1,4 @@
 class OrderFilter:
-
     def init(self, chains):
         self.chains = chains
 

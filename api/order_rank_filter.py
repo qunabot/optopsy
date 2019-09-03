@@ -1,5 +1,4 @@
 class OrderRankFilter:
-
     def init(self):
         pass
 
