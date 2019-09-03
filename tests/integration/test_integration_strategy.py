@@ -1,34 +1,29 @@
 import pytest
+import optopsy as op
 
 
-class SampleStrategy(Strategy):
-    # Create a simple strategy to buy SPX calls within 31 days to expiration at 30 delta
+class SampleStrategy(op.Strategy):
+    """Create a simple strategy to buy SPX calls within 31 days to expiration at 30 delta"""
 
     def on_init(self):
-        spx = self.get_instrument("SPX")
+        self.name = "Sample Strategy"
 
-    def entry_handler():
-        long_calls = spx.singles().call()
+    def entry_handler(self):
+        long_calls = self.get_instrument("SPX").call_option()
 
         # open a call position with 31 days to expiration at 30 delta
-        # returns an OrderFilter object
-        filters = long_calls.select_by().days_to_expiration(30, 31).delta(0.30, 0.40)
-
-        # open one contract sizing returns an OrderSize Object
-        size = long_calls.size_by().quantity(1)
+        long_calls.select_by().days_to_expiration(30, 31).delta(0.30, 0.40)
+        long_calls.size_by().quantity(1)
 
         # when multiple positions match the criteria, rank by cost basis
-        # returns an OrderRank Object
-        rank = long_calls.rank_by().rank_min().cost_basis()
+        long_calls.rank_by().rank_min().cost_basis()
+        long_calls.buy("MyLongCallID")
 
-        # buy the long calls, returns an Order Object
-        self.buy("MyLongCallID", filters, size, rank)
-
-    def exit_handler():
-        self.sell(select_position(id="MyLongCallID").exit_dte(7))
+    def exit_handler(self):
+        # self.select_position_by_id(id="MyLongCallID").exit_dte(7)
+        pass
 
 
 @pytest.mark.usefixtures("full_data_set")
 def test_strategy(full_data_set):
-    results = op.backtest(SampleStrategy, full_data_set).run()
-    assert results.total_profit() == 9330.0
+    op.Backtest(SampleStrategy, full_data_set).run()

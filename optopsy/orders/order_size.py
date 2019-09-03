@@ -1,45 +1,45 @@
 class OrderSize:
-    def init(self):
+    def __init__(self):
         pass
 
     def debit(self, target_debit):
-        pass
+        return self
 
     def debit_func(self, func):
-        pass
+        return self
 
     def cost(self, target_cost):
-        pass
+        return self
 
     def cost_func(self, func):
-        pass
+        return self
 
     def credit(self, target_credit):
-        pass
+        return self
 
     def credit_func(self, func):
-        pass
+        return self
 
     def delta(self, target_delta):
-        pass
+        return self
 
     def delta_func(self, func):
-        pass
+        return self
 
     def margin(self, target_margin):
-        pass
+        return self
 
     def margin_func(self, func):
-        pass
+        return self
 
     def quantity(self, target_quantity):
-        pass
+        return self
 
     def quantity_func(self, func):
-        pass
+        return self
 
     def risk(self, target_risk):
-        pass
+        return self
 
     def risk_func(self, func):
-        pass
+        return self
