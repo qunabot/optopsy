@@ -1,6 +1,6 @@
 import logging
 
-from optopsy.orders.order import Order
+from optopsy.api.order_filter import OrderFilter
 
 
 class Strategy:
@@ -12,7 +12,7 @@ class Strategy:
         """
         Create a new order with this instrument
         """
-        new_order = Order(symbol)
+        new_order = OrderFilter(symbol)
         self.orders.append(new_order)
         return self.orders[-1]
 

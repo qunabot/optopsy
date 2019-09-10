@@ -1,21 +1,20 @@
-from optopsy.orders.order_ranks.order_rank import OrderRank
-from optopsy.orders.order_size import OrderSize
-from optopsy.orders.order_filters.order_filter_scope import OrderFilterScope
-from optopsy.orders.order_filters.order_filter_scope2 import OrderFilterScope2
-from optopsy.orders.order_filters.order_filter_scope3 import OrderFilterScope3
-from optopsy.orders.order_filters.order_filter_scope4 import OrderFilterScope4
-from optopsy.orders.order_ranks.order_rank import OrderRank
-from optopsy.orders.order_size import OrderSize
+from optopsy.api.order_rank import OrderRank
+from optopsy.api.order_size import OrderSize
+from optopsy.api.order_filter_scope import OrderFilterScope
+from optopsy.api.order_filter_scope2 import OrderFilterScope2
+from optopsy.api.order_filter_scope3 import OrderFilterScope3
+from optopsy.api.order_filter_scope4 import OrderFilterScope4
+from optopsy.api.order_rank import OrderRank
+from optopsy.api.order_size import OrderSize
+from optopsy.api.option_strategy import OptionStrategy
 from optopsy.enums import OrderType
-from optopsy.option_strategy import OptionStrategy
 
 
-class Order(OptionStrategy):
+class OrderFilter(OptionStrategy):
     def __init__(self, symbol):
         self.symbol = symbol
         self.order_id = None
         self.comment = None
-        self.strategy_name = None
         self.settings = {}
         self.legs = []
 

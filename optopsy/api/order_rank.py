@@ -1,4 +1,4 @@
-from optopsy.orders.order_ranks.order_rank_filter import OrderRankFilter
+from optopsy.api.order_rank_filter import OrderRankFilter
 
 class OrderRank:
     def init(self):
