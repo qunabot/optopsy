@@ -8,16 +8,18 @@ class OptionStrategy:
 
     def call_option(self):
         self.strategy_name = "Single Call Option"
-        self.legs.append((OptionType.CALL, 1))
+        self.legs = [(OptionType.CALL, 1)]
         return self
 
     def put_option(self):
         self.strategy_name = "Single Put Option"
-        self.legs.append((OptionType.PUT, 1))
+        self.legs = [(OptionType.PUT, 1)]
         return self
 
     def iron_condor(self):
-        pass
+        self.strategy_name = "Iron Condor"
+        self.legs = [(OptionType.PUT, 1), (OptionType.CALL, -1), (OptionType.PUT, -1), (OptionType.CALL, 1)]
+        return self
 
     def unbalanced_iron_condor(self):
         pass
