@@ -58,3 +58,4 @@ pip install optopsy
 Optopsy is best used with Jupyter notebooks, however, it is also possible to incorporate it into your python scripts:
 
 The following example uses [Level 2 Historical CSV Data Sample](http://www.deltaneutral.com/files/Sample_SPX_20151001_to_20151030.csv) from historicaloptiondata.com.
+[![Run on Repl.it](https://repl.it/badge/github/michaelchu/optopsy)](https://repl.it/github/michaelchu/optopsy)
